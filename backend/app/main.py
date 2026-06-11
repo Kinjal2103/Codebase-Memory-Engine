@@ -79,36 +79,36 @@ async def health_check(db: AsyncSession = Depends(get_db)):
         "neo4j": neo4j_status
     }
 
+from datetime import datetime, timezone
+
 @app.post("/test-file")
-async def test_file_endpoint(filename: str, filepath: str, content: str = None, db: AsyncSession = Depends(get_db)):
+async def test_file_endpoint(path: str, language: str, db: AsyncSession = Depends(get_db)):
     """
     Test endpoint to insert a file into PostgreSQL and return the written record.
     """
     try:
         # Check if file already exists
-        stmt = select(DBFile).where(DBFile.filepath == filepath)
+        stmt = select(DBFile).where(DBFile.path == path)
         result = await db.execute(stmt)
         existing = result.scalars().first()
         if existing:
             return {"message": "File already exists in PostgreSQL", "data": {
                 "id": existing.id,
-                "filename": existing.filename,
-                "filepath": existing.filepath,
-                "content": existing.content,
-                "created_at": existing.created_at
+                "path": existing.path,
+                "language": existing.language,
+                "last_modified": existing.last_modified
             }}
             
-        db_file = DBFile(filename=filename, filepath=filepath, content=content)
+        db_file = DBFile(path=path, language=language, last_modified=datetime.now(timezone.utc))
         db.add(db_file)
         await db.commit()
         await db.refresh(db_file)
         
         return {"message": "File created successfully in PostgreSQL", "data": {
             "id": db_file.id,
-            "filename": db_file.filename,
-            "filepath": db_file.filepath,
-            "content": db_file.content,
-            "created_at": db_file.created_at
+            "path": db_file.path,
+            "language": db_file.language,
+            "last_modified": db_file.last_modified
         }}
     except Exception as e:
         await db.rollback()

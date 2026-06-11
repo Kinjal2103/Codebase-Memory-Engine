@@ -33,7 +33,7 @@ functions.json
 
 # Model and package caches
 .cache/
-models/
+
 
 # Logs and temporary files
 *.log
