@@ -4,6 +4,9 @@ from app.services.file_walker import walk_repository
 from app.services.ast_parser import parse_file
 from app.services.git_indexer import get_git_history
 from app.models.code_node import DBFile, DBFunction, DBClass, DBImport, DBCommit, commit_files
+from app.utils.chunker import chunk_functions
+from app.services.embedder import embed_chunks
+from app.services.vector_store import build_index
 
 async def ingest_repository(repo_path: str, db: AsyncSession) -> dict:
     """
@@ -112,6 +115,24 @@ async def ingest_repository(repo_path: str, db: AsyncSession) -> dict:
 
     # 5. Commit all changes transactionally
     await db.commit()
+
+    # 6. Build and save the FAISS vector index automatically
+    try:
+        print("=== Building Vector Embeddings & FAISS Index ===")
+        chunks = await chunk_functions(db)
+        if chunks:
+            texts = [c["text"] for c in chunks]
+            metadata = [c["meta"] for c in chunks]
+            embeddings = embed_chunks(texts)
+            build_index(embeddings, metadata)
+            print(f"Successfully built FAISS index for {len(chunks)} functions.")
+        else:
+            print("No functions found to index in FAISS.")
+    except Exception as e:
+        import traceback
+        print("CRITICAL ERROR building vector index:")
+        traceback.print_exc()
+        raise RuntimeError(f"Failed to build vector index: {str(e)}") from e
 
     return {
         "files": total_files,
