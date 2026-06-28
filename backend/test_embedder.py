@@ -30,7 +30,7 @@ def test_embed():
     norms = np.linalg.norm(embeddings, axis=1)
     print("Vector norms (should be very close to 1.0):", norms)
     for i, norm in enumerate(norms):
-        assert np.isclose(norm, 1.0, atoll=1e-5), f"Vector {i} is not normalized (norm={norm})"
+        assert np.isclose(norm, 1.0, atol=1e-5), f"Vector {i} is not normalized (norm={norm})"
         
     print("\nSuccess! Embedder verified and working correctly.")
 
