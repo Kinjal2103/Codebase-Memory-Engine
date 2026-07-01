@@ -10,6 +10,9 @@ from app.models import DBFile
 from app.neo4j_db import neo4j_db
 from app.api.ingest import router as ingest_router
 from app.api.search import router as search_router
+from app.api.ask import router as ask_router
+from app.api.impact import router as impact_router
+from app.api.graph import router as graph_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -61,6 +64,9 @@ app.add_middleware(
 # Include API routers
 app.include_router(ingest_router, prefix="/api")
 app.include_router(search_router, prefix="/api")
+app.include_router(ask_router, prefix="/api")
+app.include_router(impact_router, prefix="/api")
+app.include_router(graph_router, prefix="/api")
 
 @app.get("/health")
 async def health_check(db: AsyncSession = Depends(get_db)):
