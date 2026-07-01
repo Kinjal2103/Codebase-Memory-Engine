@@ -15,6 +15,11 @@ class Settings(BaseSettings):
     NEO4J_USER: str
     NEO4J_PASSWORD: str
 
+    # LLM configurations
+    LLM_PROVIDER: str = "ollama"
+    OLLAMA_MODEL: str = "deepseek-coder:6.7b"
+    GEMINI_API_KEY: str | None = None
+
     # Tell pydantic to load from the specific absolute path
     model_config = SettingsConfigDict(
         env_file=env_file_path,
@@ -24,3 +29,4 @@ class Settings(BaseSettings):
 
 # Instantiate settings to be imported across the app
 settings = Settings()
+
