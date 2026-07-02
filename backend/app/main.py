@@ -26,6 +26,7 @@ from app.api.docs_gen import router as docs_gen_router
 from app.api.history import router as history_router
 from app.api.quality import router as quality_router
 from app.api.health import router as health_router
+from app.api.files import router as files_router
 
 # Configure Logger to exact requested format:
 # [2024-01-15 10:23:45] METHOD /path → status_code in Xms
@@ -141,6 +142,7 @@ app.include_router(docs_gen_router, prefix="/api")
 app.include_router(history_router, prefix="/api")
 app.include_router(quality_router, prefix="/api")
 app.include_router(health_router, prefix="/api")
+app.include_router(files_router, prefix="/api")
 
 @app.get("/api/repos")
 async def list_repos(db: AsyncSession = Depends(get_db)):
