@@ -18,7 +18,7 @@ async def ask_llm(prompt: str) -> str:
         try:
             # Configure and instantiate Gemini model
             genai.configure(api_key=settings.GEMINI_API_KEY)
-            model = genai.GenerativeModel("gemini-1.5-flash")
+            model = genai.GenerativeModel("gemini-2.5-flash")
             
             # Use asyncio.to_thread to execute the blocking SDK call in a separate thread
             # to keep the async loop unblocked.

@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import delete
 from app.services.file_walker import walk_repository
@@ -39,7 +40,9 @@ async def ingest_repository(repo_path: str, db: AsyncSession) -> dict:
         db_file = DBFile(
             path=rel_path_std,
             language=file_info["language"],
-            last_modified=file_info["last_modified"]
+            last_modified=file_info["last_modified"],
+            repo_path=repo_path.replace("\\", "/"),
+            ingested_at=datetime.now(timezone.utc)
         )
         db.add(db_file)
         # Flush to generate the primary key ID

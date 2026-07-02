@@ -21,6 +21,8 @@ class DBFile(Base):
     path: Mapped[str] = mapped_column(String(1024), unique=True, nullable=False)
     language: Mapped[str] = mapped_column(String(50), nullable=False)
     last_modified: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    repo_path: Mapped[str | None] = mapped_column(String(1024), nullable=True)
+    ingested_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
     # Relationships
     # one file has many functions
