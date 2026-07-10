@@ -51,7 +51,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onIngestSuccess }) => {
       <div style={styles.header}>
         <div style={styles.logoIcon}>⚡</div>
         <div style={styles.logoText}>
-          <div style={styles.logoTitle}>Antigravity</div>
+          <div style={styles.logoTitle}>Codebase Memory</div>
           <div style={styles.logoSubtitle}>Code Engine</div>
         </div>
       </div>
