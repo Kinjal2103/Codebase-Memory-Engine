@@ -1,6 +1,6 @@
 // src/components/Sidebar.tsx
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useRepo } from "./Layout";
 import { ingestRepo } from "../api/client";
 
@@ -9,6 +9,7 @@ interface SidebarProps {
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ onIngestSuccess }) => {
+  const navigate = useNavigate();
   const { repos, selectedRepo, setSelectedRepo, refreshRepos, loadingRepos } = useRepo();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [repoPath, setRepoPath] = useState("");
@@ -94,14 +95,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ onIngestSuccess }) => {
 
         <button
           onClick={() => {
-            setError(null);
-            setIsModalOpen(true);
+            navigate("/ingest");
           }}
           style={styles.ingestBtn}
         >
           ➕ Ingest new repo
         </button>
       </div>
+
 
       {/* Ingestion Modal Overlay */}
       {isModalOpen && (

@@ -7,6 +7,7 @@ import { Graph } from "./pages/Graph";
 import { Impact } from "./pages/Impact";
 import { Quality } from "./pages/Quality";
 import { History } from "./pages/History";
+import { Ingest } from "./pages/Ingest";
 
 function App() {
   return (
@@ -19,10 +20,12 @@ function App() {
           <Route path="impact" element={<Impact />} />
           <Route path="quality" element={<Quality />} />
           <Route path="history" element={<History />} />
+          <Route path="ingest" element={<Ingest />} />
         </Route>
       </Routes>
     </BrowserRouter>
   );
 }
+
 
 export default App;

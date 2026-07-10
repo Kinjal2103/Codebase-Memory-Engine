@@ -96,6 +96,18 @@ export interface RepoItem {
   last_ingested: string | null;
 }
 
+export interface IngestResult {
+  method: "local" | "github" | "upload";
+  files: number;
+  functions: number;
+  classes: number;
+  commits: number;
+  repo_name?: string;
+  url?: string;
+  path?: string;
+  filename?: string;
+}
+
 // ==========================================
 // API Client Constants & Helpers
 // ==========================================
@@ -224,4 +236,45 @@ export async function getFileContent(filePath: string): Promise<string> {
   const url = new URL(`${BASE_URL}/file`);
   url.searchParams.append("path", filePath);
   return requestText(url.toString());
+}
+
+export async function ingestLocal(repoPath: string): Promise<IngestResult> {
+  const res = await fetch(`${BASE_URL}/ingest/local`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ repo_path: repoPath })
+  })
+  if (!res.ok) {
+    const err = await res.json()
+    throw new Error(err.error || "Ingestion failed")
+  }
+  return res.json()
+}
+
+export async function ingestGithub(githubUrl: string): Promise<IngestResult> {
+  const res = await fetch(`${BASE_URL}/ingest/github`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ github_url: githubUrl })
+  })
+  if (!res.ok) {
+    const err = await res.json()
+    throw new Error(err.error || "Clone failed")
+  }
+  return res.json()
+}
+
+export async function ingestUpload(file: File): Promise<IngestResult> {
+  const form = new FormData()
+  form.append("file", file)
+  const res = await fetch(`${BASE_URL}/ingest/upload`, {
+    method: "POST",
+    body: form
+    // NO Content-Type header — browser sets it automatically with boundary
+  })
+  if (!res.ok) {
+    const err = await res.json()
+    throw new Error(err.error || "Upload failed")
+  }
+  return res.json()
 }
